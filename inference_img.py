@@ -1,3 +1,4 @@
+import time
 import os
 import cv2
 import torch
@@ -67,7 +68,10 @@ img1 = F.pad(img1, padding)
 
 if args.ratio:
     if model.version >= 3.9:
+        start = time.time()
         img_list = [img0, model.inference(img0, img1, args.ratio), img1]
+        end = time.time()
+        print(f'Model took {end - start} seconds to run')
     else:
         img0_ratio = 0.0
         img1_ratio = 1.0
