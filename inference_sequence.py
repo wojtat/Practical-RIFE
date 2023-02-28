@@ -118,6 +118,7 @@ def infer_image(img0, img1, ratio):
 
 def read_image(path):
     img = cv2.imread(path, cv2.IMREAD_COLOR | cv2.IMREAD_ANYDEPTH)
+    # img = cv2.resize(img, (448, 256))
     img = (torch.tensor(img.transpose(2, 0, 1)).to(device) / 255.).unsqueeze(0)
     shape = img.shape
     ph = ((shape[2] - 1) // 64 + 1) * 64
