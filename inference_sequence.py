@@ -125,7 +125,7 @@ def read_image(path):
     pw = ((shape[3] - 1) // 64 + 1) * 64
     padding = (0, pw - shape[3], 0, ph - shape[2])
     img = F.pad(img, padding)
-    return img, *shape
+    return img, shape[0], shape[1], shape[2], shape[3]
 
 
 if not os.path.exists(args.output_dir):
