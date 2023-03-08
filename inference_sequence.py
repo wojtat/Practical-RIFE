@@ -66,12 +66,7 @@ image_stamps = np.array([
 ])
 
 lidar_name_prefix_len = os.listdir(args.lidar_dir)[0].rfind('_') + 1
-lidar_stamps = sorted([
-    name[
-        lidar_name_prefix_len:-len(file_name_suffix)
-    ] for name in os.listdir(args.lidar_dir)
-])
-
+lidar_names = sorted(os.listdir(args.lidar_dir))
 
 def find_closest_before(image_stamps, stamp):
     diff = image_stamps - stamp
@@ -131,8 +126,8 @@ def read_image(path):
 if not os.path.exists(args.output_dir):
     os.mkdir(args.output_dir)
 
-for desired_stamp_str in lidar_stamps:
-    desired_stamp = float(desired_stamp_str)
+for desired_stamp_name in lidar_names:
+    desired_stamp = float(desired_stamp_name[lidar_name_prefix_len:-len(file_name_suffix)])
     idx_before, stamp_before = find_closest_before(image_stamps, desired_stamp)
     idx_after, stamp_after = find_closest_after(image_stamps, desired_stamp)
 
@@ -149,9 +144,10 @@ for desired_stamp_str in lidar_stamps:
     print(f'Infering {stamp_before} < {desired_stamp} < {stamp_after} ({ratio})')
     image = infer_image(img0, img1, ratio)
 
+    out_file_name = desired_stamp_name[:-len(file_name_suffix)]
     out_path = os.path.join(
         args.output_dir,
-        f'{file_name_prefix}_{desired_stamp_str}{file_name_suffix}'
+        f'{out_file_name}.png'
     )
     cv2.imwrite(
         out_path,
